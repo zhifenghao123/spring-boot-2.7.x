@@ -23,6 +23,9 @@ check {
 
 allprojects {
 	group "org.springframework.boot"
+	// 阿里云镜像
+	maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+	maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' }
 
 	repositories {
 		mavenCentral()
