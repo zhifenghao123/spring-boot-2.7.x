@@ -43,6 +43,9 @@ import org.springframework.data.repository.Repository;
  * annotation that is equivalent to declaring {@code @Configuration},
  * {@code @EnableAutoConfiguration} and {@code @ComponentScan}.
  *
+ * hao-note:
+ * @SpringBootApplication注解能够扫描Spring组件并自动配置Spring Boot
+ *
  * @author Phillip Webb
  * @author Stephane Nicoll
  * @author Andy Wilkinson
