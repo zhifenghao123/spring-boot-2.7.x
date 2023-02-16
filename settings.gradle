@@ -1,5 +1,8 @@
 pluginManagement {
 	repositories {
+		// 阿里云镜像
+		maven { url 'https://maven.aliyun.com/repository/public/' }
+
 		mavenCentral()
 		gradlePluginPortal()
 		if (version.endsWith('-SNAPSHOT')) {
