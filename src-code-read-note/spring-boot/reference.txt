@@ -1,0 +1,3 @@
+https://juejin.cn/post/6844903825854185479
+SpringBoot可以帮助我们更好的使用Spring，更快的配置一个可以运行的Spring应用。
+
