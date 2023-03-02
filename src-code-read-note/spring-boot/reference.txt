@@ -1,3 +1,12 @@
 https://juejin.cn/post/6844903825854185479
 SpringBoot可以帮助我们更好的使用Spring，更快的配置一个可以运行的Spring应用。
 
+
+https://juejin.cn/post/6844903886990344200
+https://juejin.cn/post/6844903893839642637
+https://juejin.cn/post/6844903902186323981
+https://juejin.cn/post/7201364247501930557
+
+https://developer.aliyun.com/article/795432#:~:text=Spring%20boot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86%201%201.%E7%8E%AF%E5%A2%83%20spring-boot%201.5.9.RELEASE%202%202.%E9%85%8D%E7%BD%AE%E7%B1%BB%E6%B3%A8%E5%86%8C%E5%88%B0IOC%E5%AE%B9%E5%99%A8%E7%9A%84%E6%B5%81%E7%A8%8B%E5%9B%BE,%7D%20%7D%203.2%E3%80%81%40SpringBootApplication%E6%B3%A8%E8%A7%A3%20...%204%204.HttpEncodingAutoConfiguration%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E8%BF%87%E7%A8%8B%204.1%E3%80%81HttpEncodingAutoConfiguration%20
+
+https://juejin.cn/post/7086006830823899143
