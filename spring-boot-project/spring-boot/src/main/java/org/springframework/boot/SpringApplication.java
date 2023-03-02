@@ -242,6 +242,7 @@ public class SpringApplication {
 	 * @see #setSources(Set)
 	 */
 	public SpringApplication(Class<?>... primarySources) {
+		// 加载各种配置信息，初始化各种配置对象
 		this(null, primarySources);
 	}
 
@@ -257,14 +258,21 @@ public class SpringApplication {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public SpringApplication(ResourceLoader resourceLoader, Class<?>... primarySources) {
+		// 初始化资源加载器
 		this.resourceLoader = resourceLoader;
+		// 初始化配置类的类名信息（格式转换）
 		Assert.notNull(primarySources, "PrimarySources must not be null");
 		this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources));
+		// 推断当前应用类型(容器加载的类型):NONE、SERVLET、REACTIVE
 		this.webApplicationType = WebApplicationType.deduceFromClasspath();
+		// 获取系统配置引导信息
 		this.bootstrapRegistryInitializers = new ArrayList<>(
 				getSpringFactoriesInstances(BootstrapRegistryInitializer.class));
+		// 获取ApplicationContextInitializer.class对应的实例
 		setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));
+		// 初始化监听器，对初始化过程及运行过程进行干预
 		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
+		// 对端引导类（Mian类，即main()方法所在的类）类名信息
 		this.mainApplicationClass = deduceMainApplicationClass();
 	}
 
