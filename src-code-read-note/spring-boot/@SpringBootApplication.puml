@@ -1,27 +1,75 @@
 @startmindmap
 'https://plantuml.com/mindmap-diagram
+'https://v3.processon.com/view/60308709079129248a468dbe?fromnew=1
 
-caption figure 1
-title My super title
+caption @SpringBootApplication
+title @SpringBootApplication
 
-* <&flag>Debian
-** <&globe>Ubuntu
-*** Linux Mint
-*** Kubuntu
-*** Lubuntu
-*** KDE Neon
-** <&graph>LMDE
-** <&pulse>SolydXK
-** <&people>SteamOS
-** <&star>Raspbian with a very long name
-*** <s>Raspmbc</s> => OSMC
-*** <s>Raspyfi</s> => Volumio
+*:<b><color:red>@SpringBootApplication
+
+@SpringBootConfiguration
+@EnableAutoConfiguration
+@ComponentScan(
+    excludeFilters = {
+        @Filter(type = FilterType.CUSTOM,
+           classes = TypeExcludeFilter.class),
+		      @Filter(type = FilterType.CUSTOM,
+		         classes = AutoConfigurationExcludeFilter.class) })
+public @interface SpringBootApplication {
+...
+}
+;
+**:<b><color:red>@SpringBootConfiguration
+
+@Configuration
+@Indexed
+public @interface SpringBootConfiguration {
+...
+}
+;
+*** @Configuration
+*** @Indexed
+
+**:<b><color:red>@EnableAutoConfiguration
+
+@AutoConfigurationPackage
+@Import(AutoConfigurationImportSelector.class)
+public @interface EnableAutoConfiguration {
+...
+}
+;
+
+***:<b><color:red>@AutoConfigurationPackage
+
+@Import(AutoConfigurationPackages.Registrar.class)
+public @interface AutoConfigurationPackage {
+...
+}
+;
+****:AutoConfigurationPackages.Registrar的registerBeanDefinitions方法中，
+注册扫描路径到全局变量中，提供查询
+;
+*** @Import(AutoConfigurationImportSelector.class)
+****:AutoConfigurationImportSelector的selectImports方法中，
+通过SpringFactoriesLoader.loadFactoryNames方法
+加载META-INF/spring.factories中的EnableAutoConfiguration
+;
+*****:@Configuration + @Bean加载配置，完成自动配置
+;
+
+**:<b><color:red>@ComponentScan
+
+@Repeatable(ComponentScans.class)
+public @interface ComponentScan {
+...
+}
+;
 
 header
 My super header
 endheader
 
-center footer My super footer
+center footer SpringBoot-1
 
 legend right
   Short
