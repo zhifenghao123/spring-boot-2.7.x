@@ -95,9 +95,12 @@ public class AutoConfigurationImportSelector implements DeferredImportSelector, 
 
 	@Override
 	public String[] selectImports(AnnotationMetadata annotationMetadata) {
+		// 会在所有@Configuration类都解析完之后才执行
 		if (!isEnabled(annotationMetadata)) {
 			return NO_IMPORTS;
 		}
+		// 获取自动配置类(2.7以前版本是：META-INF/spring.factories，
+		// 2.7及以后版本是：META-INF/spring/%s.imports，springboot3之后，是已完全废弃去掉META-INF/spring.factories机制)
 		AutoConfigurationEntry autoConfigurationEntry = getAutoConfigurationEntry(annotationMetadata);
 		return StringUtils.toStringArray(autoConfigurationEntry.getConfigurations());
 	}
