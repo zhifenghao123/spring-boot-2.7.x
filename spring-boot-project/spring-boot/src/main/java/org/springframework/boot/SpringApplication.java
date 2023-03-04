@@ -265,14 +265,14 @@ public class SpringApplication {
 		this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources));
 		// 推断当前应用类型(容器加载的类型):NONE、SERVLET、REACTIVE
 		this.webApplicationType = WebApplicationType.deduceFromClasspath();
-		// 获取系统配置引导信息
+		// 获取系统配置引导信息,从spring.factories中获取BootstrapReg1stryInitializer对象
 		this.bootstrapRegistryInitializers = new ArrayList<>(
 				getSpringFactoriesInstances(BootstrapRegistryInitializer.class));
-		// 获取ApplicationContextInitializer.class对应的实例
+		// 从spring.factories中获取ApplicationContextInitializer对象
 		setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));
-		// 初始化监听器，对初始化过程及运行过程进行干预
+		// 初始化监听器，对初始化过程及运行过程进行干预,从spring.factories中获取ApplicationListener对象(Spring自带事件监听机制中的应用监听器)
 		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
-		// 对端引导类（Mian类，即main()方法所在的类）类名信息
+		// 推断引导类（Mian类，即main()方法所在的类）类名信息
 		this.mainApplicationClass = deduceMainApplicationClass();
 	}
 
