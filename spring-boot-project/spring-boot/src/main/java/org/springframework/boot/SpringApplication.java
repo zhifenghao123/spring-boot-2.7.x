@@ -299,26 +299,43 @@ public class SpringApplication {
 	 */
 	public ConfigurableApplicationContext run(String... args) {
 		long startTime = System.nanoTime();
+		// 系统引导信息对应的上下文对象
 		DefaultBootstrapContext bootstrapContext = createBootstrapContext();
 		ConfigurableApplicationContext context = null;
+		// 模拟输入输出信号，避免出现因缺少外设导致的信号传输失败，进而引发错误（模拟显示器，键盘，鼠标...）java.awt.headless=true
 		configureHeadlessProperty();
+		// 获取当前注册的所有监听器
 		SpringApplicationRunListeners listeners = getRunListeners(args);
+		// 监听器执行了对应的操作步骤
 		listeners.starting(bootstrapContext, this.mainApplicationClass);
 		try {
+			// 获取参数
 			ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
+			// 将前期读取的数据加载成了一个环境对象，用来描述信息
 			ConfigurableEnvironment environment = prepareEnvironment(listeners, bootstrapContext, applicationArguments);
+			// 做了一个配置，备用
 			configureIgnoreBeanInfo(environment);
+			// 初始化Banner
 			Banner printedBanner = printBanner(environment);
+			// 创建容器对象，根据前期配置的容器类型进行判定并创建
 			context = createApplicationContext();
+			// 设置启动模式
 			context.setApplicationStartup(this.applicationStartup);
+			// 对容器进行设置，参数来源于前期的设定
 			prepareContext(bootstrapContext, context, environment, listeners, applicationArguments, printedBanner);
+			// 刷新容器环境
 			refreshContext(context);
+			// 刷新完毕后做后处理
 			afterRefresh(context, applicationArguments);
 			Duration timeTakenToStartup = Duration.ofNanos(System.nanoTime() - startTime);
+			// 判定是否记录启动时间的日志
 			if (this.logStartupInfo) {
+				// 创建日志对应的对象，输出日志信息，包含启动时间
 				new StartupInfoLogger(this.mainApplicationClass).logStarted(getApplicationLog(), timeTakenToStartup);
 			}
+			// 监听器执行了对应的操作步骤
 			listeners.started(context, timeTakenToStartup);
+			// 调用运行器
 			callRunners(context, applicationArguments);
 		}
 		catch (Throwable ex) {
@@ -327,6 +344,7 @@ public class SpringApplication {
 		}
 		try {
 			Duration timeTakenToReady = Duration.ofNanos(System.nanoTime() - startTime);
+			// 监听器执行了对应的操作步骤
 			listeners.ready(context, timeTakenToReady);
 		}
 		catch (Throwable ex) {
@@ -1308,6 +1326,8 @@ public class SpringApplication {
 	 * @return the running {@link ApplicationContext}
 	 */
 	public static ConfigurableApplicationContext run(Class<?>[] primarySources, String[] args) {
+		// new SpringApplication(primarySources): 加载各种配置信息，初始化各种配置对象
+		// run(args): 初始化容器，得到ApplicationContext对象
 		return new SpringApplication(primarySources).run(args);
 	}
 
