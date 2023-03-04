@@ -242,7 +242,7 @@ public class SpringApplication {
 	 * @see #setSources(Set)
 	 */
 	public SpringApplication(Class<?>... primarySources) {
-		// 加载各种配置信息，初始化各种配置对象
+		// 构造SpringApplication对象，加载各种配置信息，初始化各种配置对象
 		this(null, primarySources);
 	}
 
