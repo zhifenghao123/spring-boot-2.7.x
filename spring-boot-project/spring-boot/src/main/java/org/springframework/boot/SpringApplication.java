@@ -1340,13 +1340,13 @@ public class SpringApplication {
 		 * 1.webApplicationType=推测web应用类型(JONE、REACTIVE、SERVLET)
 		 * 2.从spring.factories中获取BootstrapReg1stryInitializer对象
 		 * 3.initializers=从spring.factories中获取ApplicationContextInitializer对象
-		 * 4.listeners=从spring.factories中获取ApplicationListener对象
+		 * 4.listeners=从spring.factories中获取ApplicationListener对象(Spring自带事件监听机制中的应用监听器)
 		 *
 		 * SpringApplication的对象.run()
-		 * 1，获取SpringApplicationRunListener---->EventPublishingRunListener
+		 * 1，获取SpringApplicationRunListener---->EventPublishingRunListener（SpringBoot提供的运行监听器，监听SpringBoot启动过程中的各个节点）
 		 * 2.SpringApplicationRunListener.starting()
 		 * 3.创建一个Spring容器
-		 * 4.ApplicationContextInitializer--->初始化Spring容器
+		 * 4.ApplicationContextInitializer--->初始化Spring容器（使用newSpringApplication（）过程中拿到的initializers）
 		 * 5.SpringApplicationRunListener.contextPrepared()
 		 * 6.把传给run方法的配置类注册成为一个Bean
 		 * 7.SpringApplicationRunListener.contextLoaded()
