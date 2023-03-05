@@ -43,6 +43,9 @@ import org.springframework.data.repository.Repository;
  * annotation that is equivalent to declaring {@code @Configuration},
  * {@code @EnableAutoConfiguration} and {@code @ComponentScan}.
  *
+ * hao-note:
+ * @SpringBootApplication 注解能够扫描Spring组件并自动配置Spring Boot
+ *
  * @author Phillip Webb
  * @author Stephane Nicoll
  * @author Andy Wilkinson
@@ -52,10 +55,10 @@ import org.springframework.data.repository.Repository;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@SpringBootConfiguration
-@EnableAutoConfiguration
+@SpringBootConfiguration   // 标注这个类是一个SpringBoot配置类
+@EnableAutoConfiguration   // 启动自动配置功能
 @ComponentScan(excludeFilters = { @Filter(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),
-		@Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class) })
+		@Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class) })   // 包扫描类
 public @interface SpringBootApplication {
 
 	/**

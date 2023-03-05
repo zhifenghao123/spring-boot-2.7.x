@@ -95,9 +95,12 @@ public class AutoConfigurationImportSelector implements DeferredImportSelector, 
 
 	@Override
 	public String[] selectImports(AnnotationMetadata annotationMetadata) {
+		// 会在所有@Configuration类都解析完之后才执行
 		if (!isEnabled(annotationMetadata)) {
 			return NO_IMPORTS;
 		}
+		// 获取自动配置类(2.7以前版本是：META-INF/spring.factories，
+		// 2.7及以后版本是：META-INF/spring/%s.imports，springboot3之后，是已完全废弃去掉META-INF/spring.factories机制)
 		AutoConfigurationEntry autoConfigurationEntry = getAutoConfigurationEntry(annotationMetadata);
 		return StringUtils.toStringArray(autoConfigurationEntry.getConfigurations());
 	}
@@ -121,14 +124,24 @@ public class AutoConfigurationImportSelector implements DeferredImportSelector, 
 		if (!isEnabled(annotationMetadata)) {
 			return EMPTY_ENTRY;
 		}
+		// 获取@EnableAutoConfiguration的属性
 		AnnotationAttributes attributes = getAttributes(annotationMetadata);
+		// 获取META-INF/spring.factories、META-INF/spring/%s.imports中的AutoConfiguration
 		List<String> configurations = getCandidateConfigurations(annotationMetadata, attributes);
+		// 按类名去重
 		configurations = removeDuplicates(configurations);
+		// 获取需要排出的AutoConfiguration，
+		// 可以通过@EnableAutoConfiguration的注解exclude属性，或者在配置文件中指定参数 spring.autoconfigure.exclude进行排除
 		Set<String> exclusions = getExclusions(annotationMetadata, attributes);
+		// 排除
 		checkExcludedClasses(configurations, exclusions);
 		configurations.removeAll(exclusions);
+		// 获取spring.factories中的AutoConfigurationImportFilter对AutoConfiguration进行过滤
+		// 默认会拿到OnBeanCondition 、OnClassCondition、OnWebApplicationCondition
+		// 这三个会去判断上面的AutoConfiguration是否符合它们自身所要求的条件，不符合的会打印日志
 		configurations = getConfigurationClassFilter().filter(configurations);
 		fireAutoConfigurationImportEvents(configurations, exclusions);
+		// 最终返回的AutoConfiguration都是符合条件的
 		return new AutoConfigurationEntry(configurations, exclusions);
 	}
 
