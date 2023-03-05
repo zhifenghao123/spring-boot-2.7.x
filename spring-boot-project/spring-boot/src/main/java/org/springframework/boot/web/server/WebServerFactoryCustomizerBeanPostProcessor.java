@@ -67,6 +67,7 @@ public class WebServerFactoryCustomizerBeanPostProcessor implements BeanPostProc
 
 	@SuppressWarnings("unchecked")
 	private void postProcessBeforeInitialization(WebServerFactory webServerFactory) {
+		// 获取WebServerFactoryCustomizer对WebServerFactory进行自定义，默认会拿到5个
 		LambdaSafe.callbacks(WebServerFactoryCustomizer.class, getCustomizers(), webServerFactory)
 				.withLogger(WebServerFactoryCustomizerBeanPostProcessor.class)
 				.invoke((customizer) -> customizer.customize(webServerFactory));
