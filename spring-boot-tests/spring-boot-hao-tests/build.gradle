@@ -1,0 +1,15 @@
+plugins {
+    id "java"
+    id "org.springframework.boot.conventions"
+}
+
+
+description = "Spring Boot hao test"
+
+group 'org.springframework.boot'
+version '2.7.9-SNAPSHOT'
+
+
+dependencies {
+    implementation(project(":spring-boot-project:spring-boot-starters:spring-boot-starter-web"))
+}
