@@ -11,5 +11,6 @@ version '2.7.9-SNAPSHOT'
 
 
 dependencies {
-    implementation(project(":spring-boot-project:spring-boot-starters:spring-boot-starter-web"))
+    /*implementation(project(":spring-boot-project:spring-boot-starters:spring-boot-starter-web"))*/
+    implementation(project(":spring-boot-project:spring-boot-starters:spring-boot-starter"))
 }
