@@ -167,7 +167,10 @@ class BeanDefinitionLoader {
 			GroovyBeanDefinitionSource loader = BeanUtils.instantiateClass(source, GroovyBeanDefinitionSource.class);
 			((GroovyBeanDefinitionReader) this.groovyReader).beans(loader.getBeans());
 		}
+		// return !(type.isAnonymousClass() || isGroovyClosure(type) || hasNoConstructors(type));
+		// 不是是匿名类，不是Groovy闭包，也存在构造函数，就向容器注册
 		if (isEligible(source)) {
+			// this.annotatedReader.register(source)，会将source注册到IOC容器中去
 			this.annotatedReader.register(source);
 		}
 	}
