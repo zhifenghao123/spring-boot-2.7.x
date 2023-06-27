@@ -43,15 +43,27 @@ abstract class FilteringSpringBootCondition extends SpringBootCondition
 
 	private ClassLoader beanClassLoader;
 
+	/**
+	 * FilteringSpringBootCondition的match方法主要做的事情还是调用抽象模板方法getOutcomes来根据条件来过滤自动配置类，
+	 * 而复写getOutcomes模板方法的有OnClassCondition,OnBeanCondition和OnWebApplicationCondition三个子类
+	 */
 	@Override
 	public boolean[] match(String[] autoConfigurationClasses, AutoConfigurationMetadata autoConfigurationMetadata) {
+		// 创建评估报告
 		ConditionEvaluationReport report = ConditionEvaluationReport.find(this.beanFactory);
+		// 注意getOutcomes是模板方法，将spring.factories文件种加载的所有自动配置类传入
+		// 子类（这里指的是OnClassCondition,OnBeanCondition和OnWebApplicationCondition类）去过滤
+		// 注意outcomes数组存储的是不匹配的结果，跟autoConfigurationClasses数组一一对应
+		/*****************************【主线，重点关注】*********************************************/
 		ConditionOutcome[] outcomes = getOutcomes(autoConfigurationClasses, autoConfigurationMetadata);
 		boolean[] match = new boolean[outcomes.length];
+		// 遍历outcomes,这里outcomes为null则表示匹配，不为null则表示不匹配
 		for (int i = 0; i < outcomes.length; i++) {
 			match[i] = (outcomes[i] == null || outcomes[i].isMatch());
 			if (!match[i] && outcomes[i] != null) {
+				// 这里若有某个类不匹配的话，此时调用父类SpringBootCondition的logOutcome方法打印日志
 				logOutcome(autoConfigurationClasses[i], outcomes[i]);
+				// 并将不匹配情况记录到report
 				if (report != null) {
 					report.recordConditionEvaluation(autoConfigurationClasses[i], this, outcomes[i]);
 				}
@@ -112,6 +124,9 @@ abstract class FilteringSpringBootCondition extends SpringBootCondition
 
 	protected enum ClassNameFilter {
 
+		/**
+		 * 	这里表示指定的类存在于类路径中，则返回true
+		 */
 		PRESENT {
 
 			@Override
@@ -121,6 +136,9 @@ abstract class FilteringSpringBootCondition extends SpringBootCondition
 
 		},
 
+		/**
+		 * 	这里表示指定的类不存在于类路径中，则返回true
+		 */
 		MISSING {
 
 			@Override
@@ -130,17 +148,21 @@ abstract class FilteringSpringBootCondition extends SpringBootCondition
 
 		};
 
+		// 这又是一个抽象方法，分别被PRESENT和MISSING枚举类实现
 		abstract boolean matches(String className, ClassLoader classLoader);
 
+		// 检查指定的类是否存在于类路径中
 		static boolean isPresent(String className, ClassLoader classLoader) {
 			if (classLoader == null) {
 				classLoader = ClassUtils.getDefaultClassLoader();
 			}
+			// 利用类加载器去加载相应类，若没有抛出异常则说明类路径中存在该类，此时返回true
 			try {
 				resolve(className, classLoader);
 				return true;
 			}
 			catch (Throwable ex) {
+				// 若不存在于类路径中，此时抛出的异常将catch住，返回false。
 				return false;
 			}
 		}

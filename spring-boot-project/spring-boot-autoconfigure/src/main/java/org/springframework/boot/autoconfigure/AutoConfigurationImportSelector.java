@@ -404,6 +404,15 @@ public class AutoConfigurationImportSelector implements DeferredImportSelector, 
 			// getAutoConfigurationImportFilters方法：拿到OnBeanCondition，OnClassCondition和OnWebApplicationCondition
 			// 然后遍历这三个条件类去过滤从spring.factories加载的大量配置类
 			for (AutoConfigurationImportFilter filter : this.filters) {
+				/**
+				 * AutoConfigurationImportFilter接口有一个具体的实现类FilteringSpringBootCondition，
+				 * FilteringSpringBootCondition又有三个具体的子类：OnClassCondition,OnBeanCondtition和OnWebApplicationCondition
+				 *
+				 * FilteringSpringBootCondition实现了AutoConfigurationImportFilter接口的match方法，
+				 * 然后在FilteringSpringBootCondition的match方法调用getOutcomes这个抽象模板方法返回自动配置类的匹配与否的信息。
+				 * 同时，最重要的是FilteringSpringBootCondition的三个子类OnClassCondition,OnBeanCondtition
+				 * 和OnWebApplicationCondition将会复写这个模板方法实现自己的匹配判断逻辑。
+				 */
 				// 判断各种filter来判断每个candidate（这里实质要通过candidate(自动配置类)拿到其标注的
 				// @ConditionalOnClass,@ConditionalOnBean和@ConditionalOnWebApplication里面的注解值）是否匹配，
 				// 注意candidates数组与match数组一一对应
