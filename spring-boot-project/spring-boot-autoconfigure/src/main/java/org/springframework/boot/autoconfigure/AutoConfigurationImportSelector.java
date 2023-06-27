@@ -390,33 +390,55 @@ public class AutoConfigurationImportSelector implements DeferredImportSelector, 
 			this.filters = filters;
 		}
 
+		/**
+		 * AutoConfigurationImportSelector的filter方法主要做的事情就是调用AutoConfigurationImportFilter接口的match方法来
+		 * 判断每一个自动配置类上的条件注解（若有@ConditionalOnClass,@ConditionalOnBean或@ConditionalOnWebApplication的话）是否满足条件，
+		 * 若满足，则返回true，说明匹配，若不满足，则返回false说明不匹配。
+		 */
 		List<String> filter(List<String> configurations) {
 			long startTime = System.nanoTime();
+			// 将从spring.factories中获取的自动配置类转出字符串数组
 			String[] candidates = StringUtils.toStringArray(configurations);
+			// 是否需要跳过标识
 			boolean skipped = false;
+			// getAutoConfigurationImportFilters方法：拿到OnBeanCondition，OnClassCondition和OnWebApplicationCondition
+			// 然后遍历这三个条件类去过滤从spring.factories加载的大量配置类
 			for (AutoConfigurationImportFilter filter : this.filters) {
+				// 判断各种filter来判断每个candidate（这里实质要通过candidate(自动配置类)拿到其标注的
+				// @ConditionalOnClass,@ConditionalOnBean和@ConditionalOnWebApplication里面的注解值）是否匹配，
+				// 注意candidates数组与match数组一一对应
+				/**********************【主线，重点关注】********************************/
 				boolean[] match = filter.match(candidates, this.autoConfigurationMetadata);
+				// 遍历match数组，注意match顺序跟candidates的自动配置类一一对应
 				for (int i = 0; i < match.length; i++) {
+					// 若有不匹配的话
 					if (!match[i]) {
+						// 因为不匹配，将相应的自动配置类置空
 						candidates[i] = null;
+						// 标注skipped为true
 						skipped = true;
 					}
 				}
 			}
+			// 这里表示若所有自动配置类经过OnBeanCondition，OnClassCondition和OnWebApplicationCondition过滤后，全部都匹配的话，则全部原样返回
 			if (!skipped) {
 				return configurations;
 			}
+			// 建立result集合来装匹配的自动配置类
 			List<String> result = new ArrayList<>(candidates.length);
 			for (String candidate : candidates) {
+				// 若相应的自动配置类置不为空，则表示都是匹配的，此时添加到result集合中
 				if (candidate != null) {
 					result.add(candidate);
 				}
 			}
+			// 打印日志
 			if (logger.isTraceEnabled()) {
 				int numberFiltered = configurations.size() - result.size();
 				logger.trace("Filtered " + numberFiltered + " auto configuration class in "
 						+ TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + " ms");
 			}
+			// 最后返回符合条件的自动配置类
 			return result;
 		}
 
@@ -505,18 +527,26 @@ public class AutoConfigurationImportSelector implements DeferredImportSelector, 
 			}
 		}
 
+		/**
+		 * selectImports方法主要是针对经过排除掉exclude的和被AutoConfigurationImportFilter接口过滤后的满足条件的自动配置类
+		 * 再进一步排除exclude的自动配置类，然后再排序。
+		 */
 		@Override
 		public Iterable<Entry> selectImports() {
 			if (this.autoConfigurationEntries.isEmpty()) {
 				return Collections.emptyList();
 			}
+			// 这里得到所有要排除的自动配置类的set集合
 			Set<String> allExclusions = this.autoConfigurationEntries.stream()
 					.map(AutoConfigurationEntry::getExclusions).flatMap(Collection::stream).collect(Collectors.toSet());
+			// 这里得到经过滤后所有符合条件的自动配置类的set集合
 			Set<String> processedConfigurations = this.autoConfigurationEntries.stream()
 					.map(AutoConfigurationEntry::getConfigurations).flatMap(Collection::stream)
 					.collect(Collectors.toCollection(LinkedHashSet::new));
+			// 移除掉要排除的自动配置类
 			processedConfigurations.removeAll(allExclusions);
 
+			// 对标注有@Order注解的自动配置类进行排序，
 			return sortAutoConfigurations(processedConfigurations, getAutoConfigurationMetadata()).stream()
 					.map((importClassName) -> new Entry(this.entries.get(importClassName), importClassName))
 					.collect(Collectors.toList());
