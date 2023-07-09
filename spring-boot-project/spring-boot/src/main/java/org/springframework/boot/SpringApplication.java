@@ -265,7 +265,7 @@ public class SpringApplication {
 		this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources));
 		// 推断当前应用类型(容器加载的类型):NONE、SERVLET、REACTIVE
 		this.webApplicationType = WebApplicationType.deduceFromClasspath();
-		// 获取系统配置引导信息,从spring.factories中获取BootstrapReg1stryInitializer对象
+		// 获取系统配置引导信息,从spring.factories中获取BootstrapRegistryInitializer对象
 		this.bootstrapRegistryInitializers = new ArrayList<>(
 				getSpringFactoriesInstances(BootstrapRegistryInitializer.class));
 		// 从spring.factories中获取ApplicationContextInitializer对象
