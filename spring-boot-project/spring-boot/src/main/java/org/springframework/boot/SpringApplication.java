@@ -1337,8 +1337,8 @@ public class SpringApplication {
 		// run(args): 初始化容器，得到ApplicationContext对象
 		/**
 		 * 生成一个SpringApplication的对象
-		 * 1.webApplicationType=推测web应用类型(JONE、REACTIVE、SERVLET)
-		 * 2.从spring.factories中获取BootstrapReg1stryInitializer对象
+		 * 1.webApplicationType=推测web应用类型(NONE、REACTIVE、SERVLET)
+		 * 2.从spring.factories中获取BootstrapRegistryInitializer对象
 		 * 3.initializers=从spring.factories中获取ApplicationContextInitializer对象
 		 * 4.listeners=从spring.factories中获取ApplicationListener对象(Spring自带事件监听机制中的应用监听器)
 		 *
